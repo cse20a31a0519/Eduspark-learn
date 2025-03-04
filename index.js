@@ -140,6 +140,85 @@ async function initializeUserData(userId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+
+    // Guest Admin login functionality
+    const guestAdminButton = document.getElementById("guestAdminButton");
+    if (guestAdminButton) {
+      guestAdminButton.addEventListener("click", async (e) => {
+        e.preventDefault(); // Prevent default behavior
+  
+        const adminEmail = "tejasri6486@gmail.com"; // Default admin email
+        const adminPassword = "Teju64@8"; // Default admin password
+  
+        try {
+          // Attempt to log in as the admin
+          const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+          const userId = userCredential.user.uid;
+          localStorage.setItem('userid', userId);
+  
+          // Fetch admin details from the database (optional)
+          const userSnapshot = await get(ref(database, `users/${userId}`));
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.val();
+            localStorage.setItem('username', userData.username);
+  
+            // Show success message and redirect to admin.html
+            Swal.fire({
+              title: `Hi, Welcome ${userData.username}!`,
+              text: "You are logged in as an admin.",
+              icon: "success"
+            }).then(() => {
+              window.location.href = "admin.html"; // Redirect to admin.html
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Guest Admin Login Error",
+            text: error.message
+          });
+        }
+      });
+    }
+
+    // Guest login functionality
+    const guestLoginButton = document.getElementById("guestLoginButton");
+    if (guestLoginButton) {
+      guestLoginButton.addEventListener("click", async (e) => {
+        e.preventDefault(); // Prevent default behavior
+  
+        const guestEmail = "tejaS@gmail.com"; // Default guest email
+        const guestPassword = "Teja@123"; // Default guest password
+  
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, guestEmail, guestPassword);
+          const userId = userCredential.user.uid;
+          localStorage.setItem('userid', userId);
+  
+          const userSnapshot = await get(ref(database, `users/${userId}`));
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.val();
+            localStorage.setItem('username', userData.username);
+  
+            Swal.fire({
+              title: `Hi, Welcome ${userData.username}!`,
+              text: "You are logged in as a guest.",
+              icon: "success"
+            }).then(() => {
+              window.location.href = "main.html"; // Redirect to main.html
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Guest Login Error",
+            text: error.message
+          });
+        }
+      });
+    }
+
   // Signup functionality
   const emailSignupButton = document.getElementById("emailSignupButton");
   if (emailSignupButton) {
@@ -236,6 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  
 
   // // Admin login functionality
   const adminLoginForm = document.getElementById("adminLoginForm");

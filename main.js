@@ -581,7 +581,7 @@ const handleUPIPayment = async (course) => {
         title: `UPI Payment for ${course.title}`,
         text: `Price: $${course.price}`,
         html:
-            `<img src="path_to_qr_code_image.png" alt="QR Code" style="width: 200px; height: 200px; margin-bottom: 20px;">
+            `
             <input id="swal-input-upi" class="swal2-input" placeholder="Enter UPI ID">
             <label style="display: block; margin-top: 10px;">
                 <input type="checkbox" id="swal-input-confirm" class="swal2-checkbox">
@@ -750,6 +750,7 @@ if (logoutButton) {
             text: "Do you want to logout?",
             icon: 'warning',
             showCancelButton: true,
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, logout!',
             cancelButtonText: 'Cancel'
         });

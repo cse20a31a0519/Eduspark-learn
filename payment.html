@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payments</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -26,7 +27,7 @@
         .footer {
             background-color: #2563EB; /* Blue background */
             color: white; /* White text */
-            padding: 20px 0;
+            padding: 10px 0;
             text-align: center;
             margin-top: auto; /* Push footer to the bottom */
         }
@@ -66,7 +67,7 @@
 <body>
     <div class="wrapper">
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2563EB;">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #2563EB;">
             <div class="container-fluid">
                 <a class="navbar-brand text-white" href="#" style="font-weight: bold;">
                     <i class="fas fa-graduation-cap mr-2"></i> EduSpark
@@ -104,7 +105,7 @@
 
         <!-- Main Content -->
         <div class="content container mt-5">
-            <h2>Payment History</h2>
+            <h2 class="mt-5">Payment History</h2>
             <div id="payments-list" class="row"></div>
         </div>
 
@@ -186,14 +187,45 @@
       }
 
       // Logout functionality
+      // document.getElementById('Logout').addEventListener('click', () => {
+      //   signOut(auth).then(() => {
+      //     console.log("User logged out successfully"); // Debugging: Log successful logout
+      //     window.location.href = "login.html";
+      //   }).catch((error) => {
+      //     console.error("Logout error:", error); // Debugging: Log logout error
+      //   });
+      // });
       document.getElementById('Logout').addEventListener('click', () => {
-        signOut(auth).then(() => {
-          console.log("User logged out successfully"); // Debugging: Log successful logout
-          window.location.href = "login.html";
-        }).catch((error) => {
-          console.error("Logout error:", error); // Debugging: Log logout error
+  // Show SweetAlert2 confirmation dialog
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You are about to log out. Do you want to continue?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, log out!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // If user confirms, proceed with logout
+      signOut(auth).then(() => {
+        console.log("User logged out successfully");
+        // Redirect to the home page or login page
+        window.location.href = "index.html";
+      }).catch((error) => {
+        console.error("Logout error:", error);
+        // Show error message if logout fails
+        Swal.fire({
+          icon: 'error',
+          title: 'Logout Failed',
+          text: 'An error occurred while logging out. Please try again.'
         });
       });
+    }
+  });
+});
+
     </script>
 
     <!-- Bootstrap JS -->

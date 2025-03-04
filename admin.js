@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
 import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 import { getDatabase, ref, get, set, child } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+// import Swal from "https://cdn.jsdelivr.net/npm/sweetalert2@11";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -71,7 +72,54 @@ const displayCourses = async () => {
     }
 };
 
-// Fetch Users and Display in Table
+// // Fetch Users and Display in Table
+// const displayUsers = async () => {
+//     const userTableBody = document.getElementById("user-table-body");
+//     userTableBody.innerHTML = "";
+
+//     try {
+//         const usersSnapshot = await get(ref(database, "users"));
+//         if (usersSnapshot.exists()) {
+//             const users = usersSnapshot.val();
+//             for (const userId in users) {
+//                 const user = users[userId];
+//                 const enrolledCourses = user.enrolledCourses ? Object.values(user.enrolledCourses).map(course => course.title).join(', ') : 'None';
+//                 const payments = user.payments ? Object.values(user.payments).map(payment => `$${payment.amount} on ${new Date(payment.date).toLocaleDateString()}`).join(', ') : 'None';
+//                 console.log("User:", user);
+//                 const userRow = document.createElement("tr");
+//                 userRow.className = "hover:bg-gray-100 transition-colors duration-200";
+//                 userRow.innerHTML = `
+//                     <td class="py-3 px-4 border-b">${userId}</td>
+//                     <td class="py-3 px-4 border-b">${user.email}</td>
+//                     <td class="py-3 px-4 border-b">${enrolledCourses}</td>
+//                     <td class="py-3 px-4 border-b">${payments}</td>
+//                     <td class="py-3 px-4 border-b">
+//                         <button class="delete-user bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition-colors duration-200" data-user-id="${userId}">Delete</button>
+//                     </td>
+//                 `;
+//                 userTableBody.appendChild(userRow);
+//             }
+
+//             // Handle User Deletion
+//             document.querySelectorAll(".delete-user").forEach(button => {
+//                 button.addEventListener("click", async (e) => {
+//                     const userId = e.target.getAttribute("data-user-id");
+//                     await set(ref(database, `users/${userId}`), null);
+//                     e.target.closest("tr").remove();
+//                     Swal.fire({
+//                         icon: "success",
+//                         title: "User Deleted",
+//                         text: `User with ID ${userId} has been deleted.`
+//                     });
+//                 });
+//             });
+//         } else {
+//             userTableBody.innerHTML = "<tr><td colspan='5' class='py-3 px-4 border-b text-center text-gray-600'>No users available.</td></tr>";
+//         }
+//     } catch (error) {
+//         console.error("Error fetching users:", error);
+//     }
+// };
 const displayUsers = async () => {
     const userTableBody = document.getElementById("user-table-body");
     userTableBody.innerHTML = "";
@@ -82,9 +130,29 @@ const displayUsers = async () => {
             const users = usersSnapshot.val();
             for (const userId in users) {
                 const user = users[userId];
-                const enrolledCourses = user.enrolledCourses ? Object.values(user.enrolledCourses).map(course => course.title).join(', ') : 'None';
-                const payments = user.payments ? Object.values(user.payments).map(payment => `$${payment.amount} on ${new Date(payment.date).toLocaleDateString()}`).join(', ') : 'None';
 
+                // Handle enrolled courses
+                const enrolledCourses = user.enrolledCourses
+                    ? Object.values(user.enrolledCourses).map(course => course.title).join(', ')
+                    : 'None';
+
+                // Handle payments
+                const payments = user.payments
+                    ? user.payments
+                          .map((payment) => {
+                              // Normalize payment data
+                              const amount = payment.amount || payment.price || 0; // Use amount or price, default to 0
+                              const date = payment.date || payment.paidOn || "Invalid Date"; // Use date or paidOn, default to "Invalid Date"
+
+                              // Format the payment string
+                              return `$${amount} on ${new Date(date).toLocaleDateString()}`;
+                          })
+                          .join(', ')
+                    : 'None';
+
+                console.log("User:", user);
+
+                // Create a new row for the user
                 const userRow = document.createElement("tr");
                 userRow.className = "hover:bg-gray-100 transition-colors duration-200";
                 userRow.innerHTML = `
@@ -96,11 +164,13 @@ const displayUsers = async () => {
                         <button class="delete-user bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition-colors duration-200" data-user-id="${userId}">Delete</button>
                     </td>
                 `;
+
+                // Append the row to the table body
                 userTableBody.appendChild(userRow);
             }
 
             // Handle User Deletion
-            document.querySelectorAll(".delete-user").forEach(button => {
+            document.querySelectorAll(".delete-user").forEach((button) => {
                 button.addEventListener("click", async (e) => {
                     const userId = e.target.getAttribute("data-user-id");
                     await set(ref(database, `users/${userId}`), null);
@@ -108,7 +178,7 @@ const displayUsers = async () => {
                     Swal.fire({
                         icon: "success",
                         title: "User Deleted",
-                        text: `User with ID ${userId} has been deleted.`
+                        text: `User with ID ${userId} has been deleted.`,
                     });
                 });
             });

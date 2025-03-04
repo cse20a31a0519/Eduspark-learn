@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const fetchCourseDetails = async (title, category) => {
     try {
-        const response = await fetch(`https://eduspark-99dff-default-rtdb.firebaseio.com/admin/courses/${category}.json`);
+        const response = await fetch(`https://index-16f53-default-rtdb.firebaseio.com/admin/courses/${category}.json`);
         const coursesData = await response.json();
 
         console.log("Fetched courses data:", coursesData); // Log the fetched data
@@ -64,9 +64,9 @@ const displayCourseDetails = (course) => {
                 <div>
                     <h5>Course Title: ${video.title}</h5>
                 </div>
-                <div class="btn-group gap-10">
-                    <button class="btn btn-primary me-2 " onclick="playVideo('${video.url}')">Play</button>
-                    <button class="btn btn-warning me-2" onclick="addToWatchLater('${video.url}', '${video.title}', '${course.title}')">Watch Later</button>
+                <div class="btn-group gap-2">
+                    <button class="btn btn-primary  " onclick="playVideo('${video.url}')">Play</button>
+                    <button class="btn btn-warning " onclick="addToWatchLater('${video.url}', '${video.title}', '${course.title}')">Watch Later</button>
                     <button class="btn btn-success" onclick="markAsComplete(this)">Complete</button>
                 </div>
             `;
@@ -171,7 +171,7 @@ const markAsComplete = (button) => {
 document.getElementById("generate-certificate").addEventListener("click", async () => {
     const userId = localStorage.getItem("userid");
     const courseTitle = localStorage.getItem("courseTitle");
-    const userName = localStorage.getItem("userName");
+    const userName = localStorage.getItem("username");
 
     if (!userId || !courseTitle || !userName) {
         Swal.fire({
@@ -235,4 +235,24 @@ document.getElementById("generate-certificate").addEventListener("click", async 
             text: "Failed to generate certificate.",
         });
     }
+});
+
+
+document.getElementById('Logout').addEventListener('click', () => {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to log out. Do you want to continue?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, log out!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Perform logout (replace with your logout logic)
+            console.log("User logged out successfully");
+            window.location.href = "index.html"; // Redirect to login page
+        }
+    });
 });
