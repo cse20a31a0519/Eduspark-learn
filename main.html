@@ -91,6 +91,71 @@ button {
         bottom: 0;
         width: 100%;
     }
+    .btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.btn-container .btn {
+    flex: 0 0 48%;
+    height: 42px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    padding: 0; /* Remove extra padding */
+    line-height: 42px; /* Vertically center text */
+    text-align: center;
+    display: inline-block;
+}
+.card-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .responsive-img {
+        width: 100%;
+        height: auto;
+    }
+
+    .card-body {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .card-button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Media Query for smaller screens */
+    @media (max-width: 768px) {
+        .card-container {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
         
     </style>
 </head>
