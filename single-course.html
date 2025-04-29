@@ -8,29 +8,27 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <!-- Tailwind CSS
-    <script src="https://cdn.tailwindcss.com"></script> -->
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom Styles -->
     <style>
-    .navbar {
-    height: 60px;
-    background-color: #2563EB !important; 
-}
+        .navbar {
+            height: 60px;
+            background-color: #2563EB !important; 
+        }
 
-.navbar-collapse {
-    background-color: #2563EB !important; 
-}
+        .navbar-collapse {
+            background-color: #2563EB !important; 
+        }
 
+        @media (min-width: 992px) {
+            .navbar-collapse {
+                background-color: transparent !important;
+            }
+        }
 
-@media (min-width: 992px) {
-    .navbar-collapse {
-        background-color: transparent !important;
-    }
-}
         .footer {
-            background-color: #2563EB; /* Blue-600 */
+            background-color: #2563EB;
             color: white;
             padding: 10px 0;
             text-align: center;
@@ -38,254 +36,153 @@
             bottom: 0;
             width: 100%;
         }
-        .container { margin-top: 80px;min-height: 1250px; }
-        .video-item { margin-bottom: 10px; }
-        .video-player { margin-top: 20px; }
-        iframe, video { width: 100%; height: 350px; }
-        .progress { margin-top: 20px; height: 30px; }
-        .progress-bar { transition: width 0.5s ease; }
-        #generate-certificate { margin-top: 20px; }
-        .navbar { height: 60px; }
-        .btn-back { background-color: #ffc107; color: white; }
-        .course-title { text-align: center; }
 
+        .container { 
+            margin-top: 80px;
+            min-height: 1250px; 
+            padding-bottom: 60px; /* Add padding to prevent footer overlap */
+        }
 
-.course-title {
-    font-size: 2rem;
-    font-weight: bolder;
-}
+        /* Video Container Styles */
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.video-player {
-    width: 100%;
-    height: 400px; 
-    background-color: #000;
-}
+        .video-container::before {
+            content: "";
+            display: block;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
 
-.progress {
-    margin-top: 20px;
-}
+        .video-container iframe,
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
-.progress-bar {
-    height: 30px;
-}
+        .course-title { 
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-.btn-group {
-    margin-top: 15px;
-}
+        .progress {
+            margin: 20px auto;
+            max-width: 800px;
+            height: 30px;
+        }
 
-.btn {
-    padding: 10px 20px;
-}
+        .progress-bar { 
+            transition: width 0.5s ease; 
+        }
 
+        #generate-certificate { 
+            display: block;
+            margin: 20px auto;
+            max-width: 800px;
+            width: 100%;
+        }
 
-@media (max-width: 375px) {
-    .container {
-        min-height: 2000px; 
-    }
+        .btn-back { 
+            background-color: #ffc107; 
+            color: white; 
+        }
 
-    .course-title {
-        font-size: 1.2rem; 
-        text-align: left; 
-        margin: 10px;
-    }
+        /* Responsive Adjustments */
+        @media (max-width: 375px) {
+            .container {
+                min-height: 2000px;
+                padding: 0 15px;
+            }
+            .course-title {
+                font-size: 1.5rem;
+                text-align: left;
+            }
+        }
 
-    .video-player {
-        height: 450px; 
-    }
+        @media (max-width: 576px) {
+            .container {
+                min-height: 1550px;
+                padding: 0 15px;
+            }
+            .course-title {
+                font-size: 1.7rem;
+            }
+        }
 
-    .progress-bar {
-        height: 25px;
-    }
+        @media (min-width: 576px) and (max-width: 992px) {
+            .container {
+                min-height: 1350px;
+            }
+            .course-title {
+                font-size: 1.9rem;
+            }
+        }
 
-    .btn {
-        padding: 8px 16px; 
-        font-size: 0.8rem;  
-    }
-
-    .btn-group {
-        gap: 1rem;
-        display: flex;
-        flex-direction: column; 
-    }
-}
-
-
-@media (max-width: 576px) {
-    .container {
-        min-height: 2600px; 
-    }
-
-    .course-title {
-        font-size: 1.3rem; 
-        text-align: left; 
-    }
-
-    .video-player {
-        height: 400px; 
-    }
-
-    .progress-bar {
-        height: 25px; 
-    }
-
-    .btn {
-        padding: 8px 16px; 
-    }
-
-    .btn-group {
-        gap: 1.5rem;
-        display: flex;
-        flex-direction: column;
-    }
-}
-
-
-@media (min-width: 576px) and (max-width: 992px) {
-    .container {
-        min-height: 1750px;
-    }
-
-    .course-title {
-        font-size: 1.7rem; 
-    }
-
-    .video-player {
-        height: 400px; 
-    }
-
-    .progress-bar {
-        height: 30px; 
-    }
-
-    .btn {
-        padding: 10px 20px; 
-    }
-
-    .btn-group {
-        gap: 2rem;
-        display: flex;
-        flex-direction: row;
-    }
-}
-
-
-@media (min-width: 992px) and (max-width: 1200px) {
-    .container {
-        min-height: 1600px;
-    }
-
-    .course-title {
-        font-size: 1.9rem; 
-    }
-
-    .video-player {
-        height: 450px; 
-    }
-
-    .progress-bar {
-        height: 35px;
-    }
-
-    .btn {
-        padding: 12px 24px; 
-    }
-
-    .btn-group {
-        gap: 2.5rem;
-        display: flex;
-        flex-direction: row;
-    }
-}
-@media (min-width: 1200px) {
-    .container {
-        min-height: 1700px; 
-    }
-
-    .course-title {
-        font-size: 2rem; 
-    }
-
-    .video-player {
-        height: 500px; 
-    }
-
-    .progress-bar {
-        height: 40px; 
-    }
-
-    .btn {
-        padding: 14px 28px; 
-    }
-
-    .btn-group {
-        gap: 3rem;
-        display: flex;
-        flex-direction: row;
-    }
-}
-
-
-
-.footer {
-    background-color: #2563EB; 
-    color: white;
-    padding: 10px 0;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
-.navbar {
-    height: 60px;
-}
-
-.btn-back {
-    background-color: #ffc107;
-    color: white;
-}
-
-
-        
+        @media (min-width: 992px) {
+            .container {
+                min-height: 1300px;
+            }
+            .course-title {
+                font-size: 2.2rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #2563EB;">
-    <div class="container-fluid">
-        <a class="navbar-brand text-white" href="#" style="font-weight: bold;">
-            <i class="fas fa-graduation-cap mr-2"></i> EduSpark
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="main.html"><span>Home</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="certificates.html"><span>Certificates</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="Saved.html"><span>Saved Videos</span></a>
-                </li>
-            </ul>
-            <div class="auth-buttons d-flex">
-                <button id="Logout" class="btn btn-light">Logout</button>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#" style="font-weight: bold;">
+                <i class="fas fa-graduation-cap mr-2"></i> EduSpark
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="main.html"><span>Home</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="certificates.html"><span>Certificates</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="Saved.html"><span>Saved Videos</span></a>
+                    </li>
+                </ul>
+                <div class="auth-buttons d-flex">
+                    <button id="Logout" class="btn btn-light">Logout</button>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
+
     <!-- Main Content -->
     <div class="container">
-        <h1 class="course-title" style="font-size: 2rem; font-weight: bolder;" id="course-title"></h1>
-        <div id="video-player" class="video-player"></div>
+        <h1 class="course-title" id="course-title"></h1>
+        
+        <!-- Updated Video Container -->
+        <div class="video-container">
+            <div id="video-player" class="video-player"></div>
+        </div>
+        
         <div class="progress">
             <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
         </div>
-        <button id="generate-certificate" class="btn btn-success mb-2" disabled>Generate Certificate</button>
-        <div id="video-list" class="list-group"></div>
+        
+        <button id="generate-certificate" class="btn btn-success" disabled>Generate Certificate</button>
+        
+        <div id="video-list" class="list-group mt-4"></div>
     </div>
 
     <!-- Footer -->
@@ -299,7 +196,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="single-course.js"></script>
-
-   
 </body>
 </html>

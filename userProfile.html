@@ -10,7 +10,8 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { /* Adjusted for fixed navbar */
+        body {
+            padding-top: 70px; /* Adjusted for fixed navbar */
         }
         .navbar {
             background-color: #2563EB !important; /* Blue-600 */
@@ -32,59 +33,95 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        /* Loader Styles */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(144, 140, 140, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #2563EB;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Hide content initially */
+        .content {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2563EB;">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#" style="font-weight: bold;"><i class="fas fa-graduation-cap mr-2"></i> EduSpark</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="main.html"><span>Home</span></a>
-                    </li>
+    <!-- Loader -->
+    <div class="loader-container" id="loader">
+        <div class="loader"></div>
+    </div>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="userProfile.html"><span>User Profile</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="enrolledcourses.html"><span>My Courses</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="payment.html"><span>Payments</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="certificates.html"><span>Certificates</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="Saved.html"><span>Saved Videos</span></a>
-                    </li>
-                </ul>
-                <div class="auth-buttons d-flex">
-                    <button id="Logout" class="btn btn-light">Logout</button>
+    <!-- Main Content -->
+    <div class="content" id="main-content">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #2563EB;">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="#" style="font-weight: bold;"><i class="fas fa-graduation-cap mr-2"></i> EduSpark</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="main.html"><span>Home</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="userProfile.html"><span>User Profile</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="enrolledcourses.html"><span>My Courses</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="payment.html"><span>Payments</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="certificates.html"><span>Certificates</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="Saved.html"><span>Saved Videos</span></a>
+                        </li>
+                    </ul>
+                    <div class="auth-buttons d-flex">
+                        <button id="Logout" class="btn btn-light">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Profile Section -->
+        <div class="container mt-5">
+            <div class="profile-container">
+                <h2 class="text-center mb-4">User Profile</h2>
+                <div id="user-details">
+                    <!-- User details will be dynamically inserted here -->
                 </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Profile Section -->
-    <div class="container mt-5">
-        <div class="profile-container">
-            <h2 class="text-center mb-4">User Profile</h2>
-            <div id="user-details">
-                <!-- User details will be dynamically inserted here -->
-            </div>
-        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2023 EduSpark. All rights reserved.</p>
+        </footer>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2023 EduSpark. All rights reserved.</p>
-    </footer>
 
     <!-- Firebase and App Scripts -->
     <script type="module">
@@ -102,12 +139,23 @@
             messagingSenderId: "171804052014",
             appId: "1:171804052014:web:c38d9d50835d551cafadbf"
         };
-     
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const database = getDatabase(app);
+
+        // Show loader
+        const showLoader = () => {
+            document.getElementById("loader").style.display = "flex";
+            document.getElementById("main-content").style.display = "none";
+        };
+
+        // Hide loader and show content
+        const hideLoader = () => {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+        };
 
         // Function to display user details
         const displayUserDetails = (user) => {
@@ -117,11 +165,13 @@
                 <p><strong>Email:</strong> ${user.email}</p>
                 <p><strong>Password:</strong> ${user.password}</p>
             `;
+            hideLoader(); // Hide loader after rendering user details
         };
 
         // Fetch user details from Firebase
         const fetchUserDetails = async (userId) => {
             try {
+                showLoader(); // Show loader before fetching data
                 const userRef = ref(database, `users/${userId}`);
                 const snapshot = await get(userRef);
 
@@ -130,59 +180,55 @@
                     displayUserDetails(userData);
                 } else {
                     console.error("User data not found in Firebase.");
+                    hideLoader(); // Hide loader even if no data is found
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'User data not found.',
+                    });
                 }
             } catch (error) {
                 console.error("Error fetching user details:", error);
+                hideLoader(); // Hide loader on error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to fetch user details. Please try again.',
+                });
             }
         };
 
         // Logout functionality
-    //     const logoutButton = document.getElementById("Logout");
-    // if (logoutButton) {
-    //     logoutButton.addEventListener("click", async () => {
-    //         try {
-    //             // Sign out the user
-    //             await signOut(auth);
-    //             console.log("User signed out successfully.");
-
-    //             // Redirect to index.html
-    //             window.location.href = "index.html";
-    //         } catch (error) {
-    //             console.error("Error logging out:", error);
-    //             alert("An error occurred while logging out. Please try again.");
-    //         }
-    //     });
-    // }
-    document.getElementById('Logout').addEventListener('click', () => {
-  // Show SweetAlert2 confirmation dialog
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You are about to log out. Do you want to continue?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, log out!',
-    cancelButtonText: 'Cancel'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // If user confirms, proceed with logout
-      signOut(auth).then(() => {
-        console.log("User logged out successfully");
-        // Redirect to the home page or login page
-        window.location.href = "index.html";
-      }).catch((error) => {
-        console.error("Logout error:", error);
-        // Show error message if logout fails
-        Swal.fire({
-          icon: 'error',
-          title: 'Logout Failed',
-          text: 'An error occurred while logging out. Please try again.'
+        document.getElementById('Logout').addEventListener('click', () => {
+            // Show SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to log out. Do you want to continue?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, log out!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If user confirms, proceed with logout
+                    signOut(auth).then(() => {
+                        console.log("User logged out successfully");
+                        // Redirect to the home page or login page
+                        window.location.href = "index.html";
+                    }).catch((error) => {
+                        console.error("Logout error:", error);
+                        // Show error message if logout fails
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Logout Failed',
+                            text: 'An error occurred while logging out. Please try again.'
+                        });
+                    });
+                }
+            });
         });
-      });
-    }
-  });
-});
 
         // Check authentication state
         onAuthStateChanged(auth, (user) => {
@@ -190,10 +236,10 @@
                 const userId = user.uid;
                 fetchUserDetails(userId);
             } else {
+                hideLoader(); // Hide loader if not authenticated
                 window.location.href = "index.html"; // Redirect to login page if not authenticated
             }
         });
-        
     </script>
 
     <!-- Bootstrap JS and dependencies -->

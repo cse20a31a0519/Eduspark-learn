@@ -23,6 +23,7 @@
         }
         .content {
             flex: 1;
+            display: none; /* Hide content initially until data is loaded */
         }
         .footer {
             background-color: #2563EB; /* Blue background */
@@ -62,10 +63,43 @@
             font-size: 1rem;
             color: #555;
         }
+
+        /* Loader Styles */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(144, 140, 140, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #2563EB; /* Match navbar blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
+        <!-- Loader -->
+        <div class="loader-container" id="loader">
+            <div class="loader"></div>
+        </div>
+
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2563EB;">
             <div class="container-fluid">
@@ -104,7 +138,7 @@
         </nav>
 
         <!-- Main Content -->
-        <div class="content container mt-5">
+        <div class="content container mt-5" id="main-content">
             <h2>Enrolled Courses</h2>
             <div id="courses-list" class="row"></div>
         </div>
@@ -112,7 +146,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="container">
-                <p>&copy; 2023 EduSpark. All rights reserved.</p>
+                <p>© 2023 EduSpark. All rights reserved.</p>
             </div>
         </footer>
     </div>
@@ -134,22 +168,26 @@
         appId: "1:171804052014:web:c38d9d50835d551cafadbf",
         databaseURL: "https://index-16f53-default-rtdb.firebaseio.com/"
       };
-  
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const database = getDatabase(app);
 
+      // DOM elements
+      const loader = document.getElementById("loader");
+      const content = document.getElementById("main-content");
+
       // Check authentication state
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          console.log("User is logged in:", user.uid); // Debugging: Log user UID
+          console.log("User is logged in:", user.uid);
           // Fetch user data (including username) and enrolled courses
           fetchUserData(user.uid);
         } else {
-          console.log("User is not logged in"); // Debugging: Log when user is not logged in
+          console.log("User is not logged in");
           // User is not logged in, redirect to login page
+          loader.style.display = "none";
           window.location.href = "login.html";
         }
       });
@@ -159,18 +197,21 @@
         const userRef = ref(database, `users/${userId}`);
         onValue(userRef, (snapshot) => {
           const userData = snapshot.val();
-          console.log("User Data:", userData); // Debugging: Log user data to console
+          console.log("User Data:", userData);
+
+          const coursesList = document.getElementById('courses-list');
+          coursesList.innerHTML = ''; // Clear previous content
+
+          // Hide loader and show content
+          loader.style.display = "none";
+          content.style.display = "block";
 
           if (userData) {
             const username = userData.username;
             const enrolledCourses = userData.enrolledCourses;
 
-            // Display username
-            // document.getElementById('courses-list').innerHTML = `<h3>Welcome, ${username}!</h3>`;
-
-            // Display enrolled courses
             if (enrolledCourses && Array.isArray(enrolledCourses)) {
-              console.log("Enrolled Courses:", enrolledCourses); // Debugging: Log enrolled courses
+              console.log("Enrolled Courses:", enrolledCourses);
               enrolledCourses.forEach((course, index) => {
                 const courseCard = `
                   <div class="col-md-4 mb-4">
@@ -184,59 +225,52 @@
                     </div>
                   </div>
                 `;
-                document.getElementById('courses-list').innerHTML += courseCard;
+                coursesList.innerHTML += courseCard;
               });
             } else {
-              console.log("No courses enrolled or invalid format"); // Debugging: Log when no courses are enrolled
-              document.getElementById('courses-list').innerHTML += '<p>No courses enrolled.</p>';
+              console.log("No courses enrolled or invalid format");
+              coursesList.innerHTML = '<p>No courses enrolled.</p>';
             }
           } else {
-            console.log("User data not found"); // Debugging: Log when user data is not found
-            document.getElementById('courses-list').innerHTML = '<p>User data not found.</p>';
+            console.log("User data not found");
+            coursesList.innerHTML = '<p>User data not found.</p>';
           }
+        }, (error) => {
+          console.error("Error fetching user data:", error);
+          // Hide loader and show content even on error
+          loader.style.display = "none";
+          content.style.display = "block";
+          document.getElementById('courses-list').innerHTML = '<p>Error loading enrolled courses. Please try again later.</p>';
         });
       }
 
       // Logout functionality
-      // document.getElementById('Logout').addEventListener('click', () => {
-      //   signOut(auth).then(() => {
-      //     console.log("User logged out successfully"); // Debugging: Log successful logout
-      //     window.location.href = "index.html";
-      //   }).catch((error) => {
-      //     console.error("Logout error:", error); // Debugging: Log logout error
-      //   });
-      // });
       document.getElementById('Logout').addEventListener('click', () => {
-  // Show SweetAlert2 confirmation dialog
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You are about to log out. Do you want to continue?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, log out!',
-    cancelButtonText: 'Cancel'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // If user confirms, proceed with logout
-      signOut(auth).then(() => {
-        console.log("User logged out successfully");
-        // Redirect to the home page or login page
-        window.location.href = "index.html";
-      }).catch((error) => {
-        console.error("Logout error:", error);
-        // Show error message if logout fails
         Swal.fire({
-          icon: 'error',
-          title: 'Logout Failed',
-          text: 'An error occurred while logging out. Please try again.'
+          title: 'Are you sure?',
+          text: 'You are about to log out. Do you want to continue?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, log out!',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            signOut(auth).then(() => {
+              console.log("User logged out successfully");
+              window.location.href = "index.html";
+            }).catch((error) => {
+              console.error("Logout error:", error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Logout Failed',
+                text: 'An error occurred while logging out. Please try again.'
+              });
+            });
+          }
         });
       });
-    }
-  });
-});
-
     </script>
 
     <!-- Bootstrap JS -->

@@ -107,7 +107,216 @@ onAuthStateChanged(auth, (user) => {
 //     }
 // };
 
-const displayCourses = (courses, userId) => {
+// const displayCourses = (courses, userId) => {
+//     const coursesContainer = document.getElementById("courses-container");
+//     coursesContainer.innerHTML = "";
+
+//     if (courses.length === 0) {
+//         coursesContainer.innerHTML = `<p>No courses available.</p>`;
+//         return;
+//     }
+
+//     courses.forEach((course) => {
+//         const courseElement = document.createElement("div");
+//         courseElement.className = "col-md-4 mb-4 course-card";
+
+//         let imageUrl = course.image;
+//         if (imageUrl && imageUrl.startsWith("hhttps")) {
+//             imageUrl = imageUrl.replace("hhttps", "https");
+//         }
+
+//         const isPremium = course.type === "premium";
+
+//         courseElement.innerHTML = `
+//             <div class="card h-100">
+//                 <div class="image-container">
+//                     <img src="${imageUrl}" class="card-img-top img-fluid course-image" alt="${course.title}">
+//                 </div>
+//                 <div class="card-body">
+//                     <h5 class="card-title">Title: ${course.title}</h5>
+//                     <p class="card-text">Description: ${course.description}</p>
+//                     <p class="card-price">Price: ${course.price || (isPremium ? 'Contact for Price' : 'Free')}</p>
+//                     <div class="btn-container">
+//                         <button class="btn btn-secondary mt-2 play-all" data-course-title="${course.title}">Play All</button>
+//                         <button class="btn btn-primary enroll ${isPremium ? 'premium-enroll' : ''}" data-course-title="${course.title}" style="${isPremium ? 'background-color: orange; border-color: orange;' : ''}">
+//                             ${isPremium ? 'Enroll (Premium)' : 'Enroll'}
+//                         </button>
+//                     </div>
+//                 </div>
+//             </div>
+//         `;
+
+//         coursesContainer.appendChild(courseElement);
+//     });
+//     document.querySelectorAll('.play-all').forEach(button => {
+//         button.addEventListener('click', async (e) => {
+//             e.preventDefault(); // Prevent default behavior
+//             const courseTitle = button.dataset.courseTitle;
+//             const course = courses.find(c => c.title === courseTitle);
+    
+//             if (course) {
+//                 try {
+//                     const isEnrolled = await checkEnrollment(course, userId);
+    
+//                     if (isEnrolled) {
+//                         if (course.type === "premium") {
+//                             const isPaid = await checkPayment(course, userId);
+//                             if (isPaid) {
+//                                 navigateToSingleCourse(course.title, course.category);
+//                             } else {
+//                                 Swal.fire({
+//                                     title: 'Info',
+//                                     text: 'Please complete the payment for this premium course.',
+//                                     confirmButtonText: 'OK',
+//                                     showCloseButton: true
+//                                 });
+//                             }
+//                         } else {
+//                             navigateToSingleCourse(course.title, course.category);
+//                         }
+//                     } else {
+//                         Swal.fire({
+//                             title: 'Info',
+//                             text: 'Please enroll in the course first.',
+//                             confirmButtonText: 'OK',
+//                             showCloseButton: true
+//                         });
+//                     }
+//                 } catch (error) {
+//                     console.error("Error fetching course data:", error);
+//                     Swal.fire({
+//                         title: 'Error!',
+//                         text: 'An error occurred. Please try again later.',
+//                         icon: 'error',
+//                         confirmButtonText: 'OK',
+//                         showCloseButton: true
+//                     });
+//                 }
+//             } else {
+//                 console.error("Course not found for title:", courseTitle);
+//                 Swal.fire('Error!', 'Course not found.', 'error');
+//             }
+//         });
+//     });
+//     // Event listeners for play all buttons
+//     // document.querySelectorAll('.play-all').forEach(button => {
+//     //     button.addEventListener('click', async (e) => {
+//     //         e.preventDefault()
+//     //         const courseTitle = button.dataset.courseTitle;
+//     //         const course = courses.find(c => c.title === courseTitle);
+    
+//     //         if (course) {
+//     //             try {
+//     //                 const isEnrolled = await checkEnrollment(course, userId);
+    
+//     //                 if (isEnrolled) {
+//     //                     if (course.type === "premium") {
+//     //                         const isPaid = await checkPayment(course, userId);
+//     //                         if (isPaid) {
+//     //                             navigateToSingleCourse(course.title, course.category);
+//     //                         } else {
+//     //                             Swal.fire({
+//     //                                 title: 'Info',
+//     //                                 text: 'Please complete the payment for this premium course.',
+//     //                                 confirmButtonText: 'OK',
+//     //                                 showCloseButton: true
+//     //                             });
+//     //                         }
+//     //                     } else {
+//     //                         navigateToSingleCourse(course.title, course.category);
+//     //                     }
+//     //                 } else {
+//     //                     Swal.fire({
+//     //                         title: 'Info',
+//     //                         text: 'Please enroll in the course first.',
+//     //                         confirmButtonText: 'OK',
+//     //                         showCloseButton: true
+//     //                     });
+//     //                 }
+//     //             } catch (error) {
+//     //                 console.error("Error fetching course data:", error);
+//     //                 Swal.fire({
+//     //                     title: 'Error!',
+//     //                     text: 'An error occurred. Please try again later.',
+//     //                     icon: 'error',
+//     //                     confirmButtonText: 'OK',
+//     //                     showCloseButton: true
+//     //                 });
+//     //             }
+//     //         } else {
+//     //             console.error("Course not found for title:", courseTitle);
+//     //             Swal.fire('Error!', 'Course not found.', 'error');
+//     //         }
+//     //     });
+//     // });
+//     // Event listeners for play all buttons
+//     // document.querySelectorAll('.play-all').forEach(button => {
+//     //     button.addEventListener('click', async () => {
+//     //         const courseTitle = button.dataset.courseTitle;
+//     //         const course = courses.find(c => c.title === courseTitle);
+
+//     //         if (course) {
+//     //             try {
+//     //                 const isEnrolled = await checkEnrollment(course, userId);
+
+//     //                 if (isEnrolled) {
+//     //                     if (course.type === "premium") {
+//     //                         const isPaid = await checkPayment(course, userId);
+//     //                         if (isPaid) {
+//     //                             navigateToSingleCourse(course.title);
+//     //                         } else {
+//     //                             Swal.fire({
+//     //                                 title: 'Info',
+//     //                                 text: 'Please complete the payment for this premium course.',
+//     //                                 confirmButtonText: 'OK',
+//     //                                 showCloseButton: true
+//     //                             });
+//     //                         }
+//     //                     } else {
+//     //                         navigateToSingleCourse(course.title);
+//     //                     }
+//     //                 } else {
+//     //                     Swal.fire({
+//     //                         title: 'Info',
+//     //                         text: 'Please enroll in the course first.',
+//     //                         confirmButtonText: 'OK',
+//     //                         showCloseButton: true
+//     //                     });
+//     //                 }
+//     //             } catch (error) {
+//     //                 console.error("Error fetching course data:", error);
+//     //                 Swal.fire({
+//     //                     title: 'Error!',
+//     //                     text: 'An error occurred. Please try again later.',
+//     //                     icon: 'error',
+//     //                     confirmButtonText: 'OK',
+//     //                     showCloseButton: true
+//     //                 });
+//     //             }
+//     //         } else {
+//     //             console.error("Course not found for title:", courseTitle);
+//     //             Swal.fire('Error!', 'Course not found.', 'error');
+//     //         }
+//     //     });
+//     // });
+
+//     // Event listeners for enroll buttons
+//     document.querySelectorAll('.enroll').forEach(button => {
+//         button.addEventListener('click', async (e) => {
+//             e.preventDefault()
+//             const courseTitle = button.dataset.courseTitle;
+//             const course = courses.find(c => c.title === courseTitle);
+
+//             if (course) {
+//                 await handleEnrollment(course, userId);
+//             } else {
+//                 console.error("Course not found for title:", courseTitle);
+//                 Swal.fire('Error!', 'Course not found.', 'error');
+//             }
+//         });
+//     });
+// };
+const displayCourses = async (courses, userId) => {
     const coursesContainer = document.getElementById("courses-container");
     coursesContainer.innerHTML = "";
 
@@ -116,7 +325,7 @@ const displayCourses = (courses, userId) => {
         return;
     }
 
-    courses.forEach((course) => {
+    for (const course of courses) {
         const courseElement = document.createElement("div");
         courseElement.className = "col-md-4 mb-4 course-card";
 
@@ -126,6 +335,28 @@ const displayCourses = (courses, userId) => {
         }
 
         const isPremium = course.type === "premium";
+        const isEnrolled = await checkEnrollment(course, userId); // Check enrollment status
+
+        // Conditionally set button HTML based on enrollment status
+        let buttonHtml = '';
+        if (isEnrolled) {
+            // For enrolled courses, show "Enrolled" text on the enroll button and include "Play All"
+            buttonHtml = `
+                <div class="btn-container">
+                    <button class="btn btn-secondary mt-2 play-all" data-course-title="${course.title}">Play All</button>
+                    <button class="btn btn-success enroll enrolled" data-course-title="${course.title}" disabled>Enrolled</button>
+                </div>
+            `;
+        } else {
+            // For unenrolled courses, show only the "Enroll" button
+            buttonHtml = `
+                <div class="btn-container">
+                    <button class="btn btn-primary enroll ${isPremium ? 'premium-enroll' : ''}" data-course-title="${course.title}" style="${isPremium ? 'background-color: orange; border-color: orange;' : ''}">
+                        ${isPremium ? 'Enroll (Premium)' : 'Enroll'}
+                    </button>
+                </div>
+            `;
+        }
 
         courseElement.innerHTML = `
             <div class="card h-100">
@@ -136,28 +367,25 @@ const displayCourses = (courses, userId) => {
                     <h5 class="card-title">Title: ${course.title}</h5>
                     <p class="card-text">Description: ${course.description}</p>
                     <p class="card-price">Price: ${course.price || (isPremium ? 'Contact for Price' : 'Free')}</p>
-                    <div class="btn-container">
-                        <button class="btn btn-secondary mt-2 play-all" data-course-title="${course.title}">Play All</button>
-                        <button class="btn btn-primary enroll ${isPremium ? 'premium-enroll' : ''}" data-course-title="${course.title}" style="${isPremium ? 'background-color: orange; border-color: orange;' : ''}">
-                            ${isPremium ? 'Enroll (Premium)' : 'Enroll'}
-                        </button>
-                    </div>
+                    ${buttonHtml}
                 </div>
             </div>
         `;
 
         coursesContainer.appendChild(courseElement);
-    });
+    }
+
+    // Event listeners for play-all buttons
     document.querySelectorAll('.play-all').forEach(button => {
         button.addEventListener('click', async (e) => {
-            e.preventDefault(); // Prevent default behavior
+            e.preventDefault();
             const courseTitle = button.dataset.courseTitle;
             const course = courses.find(c => c.title === courseTitle);
-    
+
             if (course) {
                 try {
                     const isEnrolled = await checkEnrollment(course, userId);
-    
+
                     if (isEnrolled) {
                         if (course.type === "premium") {
                             const isPaid = await checkPayment(course, userId);
@@ -198,112 +426,11 @@ const displayCourses = (courses, userId) => {
             }
         });
     });
-    // Event listeners for play all buttons
-    // document.querySelectorAll('.play-all').forEach(button => {
-    //     button.addEventListener('click', async (e) => {
-    //         e.preventDefault()
-    //         const courseTitle = button.dataset.courseTitle;
-    //         const course = courses.find(c => c.title === courseTitle);
-    
-    //         if (course) {
-    //             try {
-    //                 const isEnrolled = await checkEnrollment(course, userId);
-    
-    //                 if (isEnrolled) {
-    //                     if (course.type === "premium") {
-    //                         const isPaid = await checkPayment(course, userId);
-    //                         if (isPaid) {
-    //                             navigateToSingleCourse(course.title, course.category);
-    //                         } else {
-    //                             Swal.fire({
-    //                                 title: 'Info',
-    //                                 text: 'Please complete the payment for this premium course.',
-    //                                 confirmButtonText: 'OK',
-    //                                 showCloseButton: true
-    //                             });
-    //                         }
-    //                     } else {
-    //                         navigateToSingleCourse(course.title, course.category);
-    //                     }
-    //                 } else {
-    //                     Swal.fire({
-    //                         title: 'Info',
-    //                         text: 'Please enroll in the course first.',
-    //                         confirmButtonText: 'OK',
-    //                         showCloseButton: true
-    //                     });
-    //                 }
-    //             } catch (error) {
-    //                 console.error("Error fetching course data:", error);
-    //                 Swal.fire({
-    //                     title: 'Error!',
-    //                     text: 'An error occurred. Please try again later.',
-    //                     icon: 'error',
-    //                     confirmButtonText: 'OK',
-    //                     showCloseButton: true
-    //                 });
-    //             }
-    //         } else {
-    //             console.error("Course not found for title:", courseTitle);
-    //             Swal.fire('Error!', 'Course not found.', 'error');
-    //         }
-    //     });
-    // });
-    // Event listeners for play all buttons
-    // document.querySelectorAll('.play-all').forEach(button => {
-    //     button.addEventListener('click', async () => {
-    //         const courseTitle = button.dataset.courseTitle;
-    //         const course = courses.find(c => c.title === courseTitle);
-
-    //         if (course) {
-    //             try {
-    //                 const isEnrolled = await checkEnrollment(course, userId);
-
-    //                 if (isEnrolled) {
-    //                     if (course.type === "premium") {
-    //                         const isPaid = await checkPayment(course, userId);
-    //                         if (isPaid) {
-    //                             navigateToSingleCourse(course.title);
-    //                         } else {
-    //                             Swal.fire({
-    //                                 title: 'Info',
-    //                                 text: 'Please complete the payment for this premium course.',
-    //                                 confirmButtonText: 'OK',
-    //                                 showCloseButton: true
-    //                             });
-    //                         }
-    //                     } else {
-    //                         navigateToSingleCourse(course.title);
-    //                     }
-    //                 } else {
-    //                     Swal.fire({
-    //                         title: 'Info',
-    //                         text: 'Please enroll in the course first.',
-    //                         confirmButtonText: 'OK',
-    //                         showCloseButton: true
-    //                     });
-    //                 }
-    //             } catch (error) {
-    //                 console.error("Error fetching course data:", error);
-    //                 Swal.fire({
-    //                     title: 'Error!',
-    //                     text: 'An error occurred. Please try again later.',
-    //                     icon: 'error',
-    //                     confirmButtonText: 'OK',
-    //                     showCloseButton: true
-    //                 });
-    //             }
-    //         } else {
-    //             console.error("Course not found for title:", courseTitle);
-    //             Swal.fire('Error!', 'Course not found.', 'error');
-    //         }
-    //     });
-    // });
 
     // Event listeners for enroll buttons
-    document.querySelectorAll('.enroll').forEach(button => {
+    document.querySelectorAll('.enroll:not(.enrolled)').forEach(button => {
         button.addEventListener('click', async (e) => {
-            e.preventDefault()
+            e.preventDefault();
             const courseTitle = button.dataset.courseTitle;
             const course = courses.find(c => c.title === courseTitle);
 
@@ -558,7 +685,7 @@ const processPayment = async (course) => {
 const selectPaymentMethod = async (course) => {
     const { value: paymentMethod } = await Swal.fire({
         title: `Choose Payment Method for ${course.title}`,
-        text: `Price: $${course.price}`,
+        text: `Price: ${course.price}`,
         input: 'select',
         inputOptions: {
             'upi': 'UPI',

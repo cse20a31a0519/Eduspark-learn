@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -76,6 +76,298 @@
 
         document.getElementById('course-name').textContent = courseName;
         document.getElementById('student-name').textContent = studentName;
+        document.getElementById('completion-date').textContent = date;
+
+        const userId = localStorage.getItem("userid");
+        if (!userId) {
+            alert("User not logged in.");
+            window.location.href = "Home.html";
+        }
+
+        const certificateData = {
+            courseTitle: courseName,
+            studentName: studentName,
+            timestamp: new Date().toISOString()
+        };
+
+        fetch(`https://index-16f53-default-rtdb.firebaseio.com/users/${userId}/certificates.json`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(certificateData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to store certificate in Firebase.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Certificate stored successfully:", data);
+        })
+        .catch(error => {
+            console.error("Error storing certificate:", error);
+            alert("Failed to store certificate. Please try again.");
+        });
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f5f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(#d3d3d3 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .certificate {
+            background-color: #fffdf9;
+            padding: 5%;
+            border: 15px solid #2c5e77;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        
+        .certificate::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #d4af37;
+            pointer-events: none;
+        }
+        
+        .certificate h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 5vw, 42px);
+            color: #2c5e77;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .certificate .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(14px, 3vw, 18px);
+            color: #666;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 4px;
+        }
+        
+        .certificate .divider {
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            margin: 30px auto;
+            max-width: 80%;
+        }
+        
+        .certificate p {
+            font-size: clamp(16px, 3vw, 18px);
+            color: #555;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        
+        #student-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(24px, 5vw, 36px);
+            color: #2c5e77;
+            margin: 25px 0;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        
+        #course-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(20px, 4vw, 28px);
+            color: #d4af37;
+            margin: 25px 0;
+            font-style: italic;
+        }
+        
+        .date {
+            margin-top: 40px;
+            font-size: clamp(14px, 3vw, 16px);
+            color: #777;
+        }
+        
+        .seal {
+            width: 80px;
+            height: 80px;
+            background-color: #2c5e77;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px auto;
+            color: #d4af37;
+            font-family: 'Playfair Display', serif;
+            font-size: 12px;
+            border: 2px solid #d4af37;
+            transform: rotate(-15deg);
+        }
+        
+        .signatures {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        
+        .signature {
+            min-width: 150px;
+            flex: 1;
+        }
+        
+        .signature-line {
+            border-top: 1px solid #2c5e77;
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .print-button, .back-button {
+            padding: 10px 20px;
+            background-color: #2c5e77;
+            color: white;
+            border: none;
+            font-size: clamp(14px, 3vw, 16px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
+        }
+        
+        .back-button {
+            background-color: #555;
+        }
+        
+        .print-button:hover {
+            background-color: #1d4255;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .button-container {
+                display: none;
+            }
+            .certificate {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+            .certificate::before {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .certificate {
+                padding: 15px;
+                border-width: 10px;
+            }
+            .certificate::before {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+            }
+            .divider {
+                margin: 20px auto;
+            }
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .print-button, .back-button {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate" id="certificate-content">
+        <h1>CERTIFICATE OF COMPLETION</h1>
+        <p class="subtitle">This certifies that</p>
+        
+        <div class="divider"></div>
+        
+        <h2 id="student-name">[Student Name]</h2>
+        
+        <p>has successfully completed the course of study in</p>
+        
+        <h3 id="course-name">[Course Name]</h3>    
+        <p class="date">Issued on: <span id="completion-date">[Date]</span></p>
+
+        
+        <div class="button-container">
+            <button class="back-button" onclick="window.location.href='certificates.html'">Back to Certificates</button>
+            <button class="print-button" onclick="window.print()">Print Certificate</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseName = urlParams.get('courseName');
+        const studentName = urlParams.get('studentName');
+        const date = new Date().toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+
+        document.getElementById('course-name').textContent = courseName || '[Course Name]';
+        document.getElementById('student-name').textContent = studentName || '[Student Name]';
         document.getElementById('completion-date').textContent = date;
 
         const userId = localStorage.getItem("userid");
